@@ -1,0 +1,37 @@
+volatile boolean ledon=false; //volatile variable which will be changed during the interrupt function
+
+void setup()
+{
+  pinMode(13,OUTPUT); // Output pin connected to blue LED which lights up when something is in the range of PIR sensor
+  pinMode(12,OUTPUT);  // Output pin connected to the  Red LED which is connected to the interrupt button
+  pinMode(2,INPUT);   // Input pin connected to the button used for interrupt. Pin 2 corresponds to the 0 argument in the attachInterrupt() function
+  pinMode(4,INPUT);   // Input pin connected to PIR sensor which is read in the loop function
+  Serial.begin(9600);  // Baud rate
+  attachInterrupt(0,buttonPressed,CHANGE); // Whenever it sees the change in pin 2 i.e. Button , it will execute the ButtonPressed function
+}
+
+void loop()
+{
+  
+  Serial.println(digitalRead(4)); // Checking the pin no.4 connected to PIR sensor
+  if (digitalRead(4)==1)  // if there is movement in the range of PIR sensor
+  {digitalWrite(13,HIGH);} // it will turn the blue led ON
+  else                     // if there is no movement in the range of PIR sensor
+  {digitalWrite(13,LOW);}  // it will turn the LED OFF
+  
+}
+
+// The function below wil execute when interrupt function  is used
+void buttonPressed(){   
+  if(ledon)     // If the value of ledon is true, it will execute the following  
+  {
+    ledon=false;  // reverse the value of ledon variable
+    digitalWrite(12,LOW); // make the Red LED go off
+    
+  }
+  else
+  {
+    ledon=true;  // if the value of ledon is true, which it will be always
+    digitalWrite(12,HIGH); // it will turn the led on 
+  }
+}
